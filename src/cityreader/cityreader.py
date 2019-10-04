@@ -6,12 +6,16 @@ import csv
 class City:
     def __init__(self, name, lat, lon):
         self.name = name
-        self.lat = lat
-        self.lon = lon
+        self.lat = float(lat)  # converted to float - csv file has decimals
+        self.lon = float(lon)
 
   # converting object to string - for human readability!
     def __str__(self):
         return f"{self.name}: {self.lat}, {self.lon}"
+
+
+# empty cities list for storing cities
+cities = []
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -27,24 +31,19 @@ class City:
 # should not be loaded into a City object.
 
 
-# empty cities list for storing cities
-cities = []
-
-
 def cityreader(cities=[]):
 
-    filename = "cities.csv"
- # Implement the functionality to open and read from the 'cities.csv' file
-    with open(filename, newline="") as csvfile:  # first line of the CSV is header - omit
-        csvreader = csv.reader(csvfile)  # converted to reader object
+  # Functionality to open and read from the 'cities.csv' file
+    with open("cities.csv", newline="") as csvfile:
+        reader = csv.DictReader(csvfile)
 
-  # For each city record, create a new City instance and add it to the
-  # `cities` list
-    for row in csvreader:
-        cities.append(City(row["city"], row["lat"], row["lon"]))
+        # For each city record, create a new City instance and add it to the cities` list
+        for row in reader:
+            # gotcha - lng is in the csv, not lon
+            cities.append(City(row["city"], row["lat"], row["lng"]))
 
-  # returns list with all City instances from function
-    return cities
+        # Return the list with all the City instances from the function.
+        return cities
 
 
 # executing function so data populates
